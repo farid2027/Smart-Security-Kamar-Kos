@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Smart Security Kamar Kos</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600;700&family=Nunito:wght@400;600;700&display=swap">
+<style>
+:root{--bg:#fff1f6;--bg2:#ffd3e5;--card:#fff;--ink:#3b1030;--mute:#8a5a78;--line:#f7cfe1;--soft:#ffe4ef;--pink:#cc2f78;--onpink:#fff;--pink2:#ff8fb8;--ok:#17806f;--okbg:#d9f4ee;--bad:#c81e4b;--badbg:#ffe0e6;color-scheme:light;
+--h:"Fredoka","Trebuchet MS",sans-serif;--b:"Nunito","Segoe UI",system-ui,sans-serif;
+box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#24101f;--bg2:#3d1735;--card:#33182c;--ink:#ffe8f2;--mute:#d6a3bf;--line:#5a2a4a;--soft:#46203c;--pink:#ff7eb3;--onpink:#3b1030;--ok:#5fe0c4;--okbg:#12332f;--bad:#ff7b95;--badbg:#4a1626;color-scheme:dark}}
+:root[data-theme="dark"]{--bg:#24101f;--bg2:#3d1735;--card:#33182c;--ink:#ffe8f2;--mute:#d6a3bf;--line:#5a2a4a;--soft:#46203c;--pink:#ff7eb3;--onpink:#3b1030;--ok:#5fe0c4;--okbg:#12332f;--bad:#ff7b95;--badbg:#4a1626;color-scheme:dark}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+*,*::before,*::after{box-sizing:inherit}
+[hidden]{display:none!important}
+body{margin:0;min-height:100dvh;color:var(--ink);font:400 16px/1.5 var(--b);background:radial-gradient(circle at 15% 0,var(--bg2),transparent 45%),radial-gradient(circle at 100% 40%,var(--bg2),transparent 40%),var(--bg);background-attachment:fixed}
+body.alarm{animation:flash 1s steps(2) infinite}
+@keyframes flash{50%{background-color:var(--badbg)}}
+.app{max-width:440px;margin:0 auto;padding:12px 14px 96px}
+h1,h2,h3{font-family:var(--h);margin:0;letter-spacing:-.01em}
+h3{font-size:1.05rem;font-weight:600}
+p{margin:2px 0 0;color:var(--mute);font-size:.88rem}
+.card{background:var(--card);border:1.5px solid var(--line);border-radius:22px;padding:16px;margin-bottom:12px;box-shadow:0 6px 18px -10px var(--pink)}
+.row{display:flex;align-items:center;justify-content:space-between;gap:12px}
+#top{position:sticky;top:env(safe-area-inset-top,0px);z-index:5;background:var(--pink);color:var(--onpink);border-radius:20px;padding:10px 14px;margin-bottom:12px}
+#top b{font:600 1.35rem/1 var(--h);display:block}
+#top small{font-size:.8rem;opacity:.92}
+#top button{background:rgba(255,255,255,.22);color:inherit;border:0;min-height:36px;padding:6px 12px}
+.hero{text-align:center;padding:20px 16px 16px}
+.hero h1{font-size:1.75rem;line-height:1.1;color:var(--pink);margin-top:4px}
+.duck{width:104px;height:104px}
+.chip{display:inline-flex;align-items:center;gap:6px;padding:4px 12px;border-radius:99px;font-weight:700;font-size:.82rem;background:var(--okbg);color:var(--ok)}
+.chip.bad{background:var(--badbg);color:var(--bad)}.chip.off{background:var(--soft);color:var(--mute)}
+.chip::before{content:"";width:8px;height:8px;border-radius:50%;background:currentColor}
+.menu,.two,.stats{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:12px}
+.stats{grid-template-columns:repeat(3,1fr)}
+.tile{display:block;text-decoration:none;color:inherit;text-align:center;background:var(--card);border:1.5px solid var(--line);border-radius:20px;padding:14px 8px}
+.tile .e{font-size:2.3rem;line-height:1}.tile b{display:block;font:600 1rem var(--h);margin-top:6px}
+.stats .tile b{font-size:1.25rem;color:var(--pink)}.stats .tile span{font-size:.78rem;color:var(--mute)}
+button{font:700 .95rem var(--b);padding:12px 14px;border-radius:16px;border:1.5px solid var(--line);background:var(--card);color:var(--ink);cursor:pointer;min-height:46px}
+button.main{background:var(--pink);color:var(--onpink);border-color:var(--pink)}
+button.big{font:600 1.15rem var(--h);min-height:62px}
+button.on{box-shadow:0 0 0 3px var(--pink2)}
+button:focus-visible,input:focus-visible{outline:3px solid var(--pink);outline-offset:2px}
+button:disabled{opacity:.5;cursor:not-allowed}
+.band{background:var(--pink);color:var(--onpink);text-align:center;border-radius:20px;padding:12px;font:700 1.6rem var(--h);letter-spacing:.04em}
+.switch{position:relative;width:56px;height:32px;flex:none}
+.switch input{position:absolute;inset:0;opacity:0;margin:0;z-index:2;cursor:pointer}
+.switch i{position:absolute;inset:0;border-radius:99px;background:var(--line);transition:.2s}
+.switch i::after{content:"";position:absolute;top:3px;left:3px;width:26px;height:26px;border-radius:50%;background:#fff;box-shadow:0 1px 3px #0003;transition:.2s}
+.switch input:checked+i{background:var(--pink)}.switch input:checked+i::after{transform:translateX(24px)}
+.switch input:disabled{cursor:not-allowed}.switch input:disabled+i{opacity:.5}
+.switch input:focus-visible+i{outline:3px solid var(--pink2);outline-offset:2px}
+.val{font:700 2.8rem/1 var(--h);color:var(--pink)}.val small{font-size:1.1rem;color:var(--mute)}
+.gauge{position:relative;height:12px;border-radius:99px;background:var(--soft);margin:12px 0 4px}
+.gauge i{position:absolute;inset:0 auto 0 0;border-radius:99px;background:var(--pink2);transition:width .5s}
+.gauge u{position:absolute;top:-4px;bottom:-4px;width:3px;background:var(--ink);left:40%}
+.fan{font-size:2rem;display:inline-block}.fan.on{animation:sp .7s linear infinite}@keyframes sp{to{transform:rotate(360deg)}}
+.note{background:var(--badbg);color:var(--bad);border-radius:16px;padding:10px 14px;margin-bottom:12px;font-weight:700;font-size:.9rem}
+.seg{display:grid;grid-template-columns:1fr 1fr;gap:6px;background:var(--soft);padding:5px;border-radius:18px;margin-bottom:12px}
+.seg button{border:0;background:transparent;min-height:40px}.seg button[aria-selected="true"]{background:var(--pink);color:var(--onpink)}
+.item{display:flex;gap:12px;align-items:flex-start;padding:12px 0;border-bottom:1px dashed var(--line)}
+.item:last-child{border:0}.item .ic{width:36px;height:36px;border-radius:12px;background:var(--soft);display:grid;place-items:center;flex:none}
+.item.bad .ic{background:var(--badbg)}.item b{display:block;font-size:.95rem}.item time{font-size:.78rem;color:var(--mute)}
+#nav{position:fixed;left:50%;bottom:calc(10px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);width:min(420px,calc(100% - 20px));display:grid;grid-template-columns:repeat(5,1fr);background:var(--card);border:1.5px solid var(--line);border-radius:24px;padding:6px;box-shadow:0 10px 30px -10px var(--pink);z-index:6}
+#nav a{position:relative;text-align:center;text-decoration:none;color:var(--mute);font-size:.7rem;font-weight:700;padding:6px 0;border-radius:18px}
+#nav a span{display:block;font-size:1.3rem;line-height:1.2}
+#nav a[aria-current="page"]{background:var(--pink);color:var(--onpink)}
+#nav em{position:absolute;top:0;right:12px;background:var(--bad);color:#fff;border-radius:99px;font:700 .68rem/1 var(--b);padding:3px 6px;font-style:normal}
+.login{padding-top:28px;text-align:center}
+.login input{width:100%;font:600 1rem var(--b);padding:13px 14px;border-radius:14px;border:1.5px solid var(--line);background:var(--bg);color:var(--ink);margin-top:10px}
+.login label{display:block;text-align:left;font-weight:700;font-size:.85rem;margin-top:12px}
+.err{color:var(--bad);font-weight:700;font-size:.88rem;min-height:1.3em;margin:8px 0}
+.push{position:fixed;left:50%;top:calc(10px + env(safe-area-inset-top,0px));transform:translate(-50%,-140%);width:min(420px,calc(100% - 20px));background:var(--ink);color:var(--bg);border-radius:18px;padding:12px 16px;z-index:20;transition:transform .35s}
+.push.show{transform:translate(-50%,0)}.push.bad{background:var(--bad);color:#fff}.push b,.push span{display:block}.push span{font-size:.88rem}
+.member{display:flex;gap:12px;align-items:center;padding:8px 0}.member .av{width:42px;height:42px;border-radius:50%;background:var(--pink);color:var(--onpink);display:grid;place-items:center;font:600 1.1rem var(--h);flex:none}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+</style>
+</head>
+<body>
+<div id="push" class="push" role="status" aria-live="polite"></div>
+<div class="app">
+  <div id="top" hidden><div class="row"><div><b id="tt">00:00:00</b><small id="dd"></small></div><button onclick="A.logout()">Keluar</button></div></div>
+  <main id="view"></main>
+</div>
+<nav id="nav" hidden aria-label="Menu utama"></nav>
+
+<script>
+const $=s=>document.querySelector(s),K="kos7-v1",tz="Asia/Jakarta";
+let P={user:null,logins:[],acts:[],notifs:[],unread:0,sys:true,auto:true},hTab="login",err="";
+try{Object.assign(P,JSON.parse(localStorage.getItem(K)||"{}"))}catch(e){}
+const R={temp:27.2,motion:false,fan:false,buzzer:false};
+const save=()=>{try{localStorage.setItem(K,JSON.stringify(P))}catch(e){}};
+const fD=new Intl.DateTimeFormat("id-ID",{weekday:"long",day:"numeric",month:"long",year:"numeric",timeZone:tz});
+const fT=new Intl.DateTimeFormat("id-ID",{hour:"2-digit",minute:"2-digit",second:"2-digit",hourCycle:"h23",timeZone:tz});
+const fS=new Intl.DateTimeFormat("id-ID",{day:"2-digit",month:"short",hour:"2-digit",minute:"2-digit",second:"2-digit",hourCycle:"h23",timeZone:tz});
+const st=iso=>fS.format(new Date(iso)).replace(/\./g,":");
+const DUCK='<svg class="duck" viewBox="0 0 120 120" aria-hidden="true"><ellipse cx="60" cy="92" rx="34" ry="24" fill="#fff" stroke="#f0b6cd" stroke-width="2"/><circle cx="60" cy="60" r="32" fill="#fff" stroke="#f0b6cd" stroke-width="2"/><path d="M27 56a33 33 0 0 1 66 0z" fill="#ff8fb8"/><rect x="25" y="52" width="70" height="9" rx="4.5" fill="#ff6aa2"/><circle cx="60" cy="21" r="9" fill="#ffc2da"/><circle cx="48" cy="70" r="3.2" fill="#3b1030"/><circle cx="72" cy="70" r="3.2" fill="#3b1030"/><ellipse cx="60" cy="77" rx="9" ry="5.5" fill="#ffa94d"/><ellipse cx="38" cy="77" rx="6" ry="4" fill="#ff9fc4"/><ellipse cx="82" cy="77" rx="6" ry="4" fill="#ff9fc4"/><path d="M60 98c-6-5-9-8-9-11a5 5 0 0 1 9-2 5 5 0 0 1 9 2c0 3-3 6-9 11z" fill="#ff6aa2"/></svg>';
+let ac,bt;const beep=()=>{try{ac=ac||new(window.AudioContext||window.webkitAudioContext)();const o=ac.createOscillator(),g=ac.createGain();o.type="square";o.frequency.value=880;g.gain.value=.06;o.connect(g);g.connect(ac.destination);o.start();o.stop(ac.currentTime+.25)}catch(e){}};
+function sound(){clearInterval(bt);document.body.classList.toggle("alarm",R.buzzer);if(R.buzzer){beep();bt=setInterval(beep,500)}}
+function banner(h,b,bad){const p=$("#push");p.className="push show"+(bad?" bad":"");p.innerHTML=`<b>${h}</b><span>${b}</span>`;clearTimeout(banner.t);banner.t=setTimeout(()=>p.classList.remove("show"),4200)}
+function act(x){P.acts.unshift({t:new Date().toISOString(),x});P.acts=P.acts.slice(0,100);save()}
+function notify(h,b,bad){P.notifs.unshift({t:new Date().toISOString(),h,b,bad});P.notifs=P.notifs.slice(0,50);if(cur()!=="notifikasi")P.unread++;save();banner(h,b,bad);
+ try{if(window.Notification&&Notification.permission==="granted")new Notification(h,{body:b})}catch(e){}
+ try{if(bad&&navigator.vibrate)navigator.vibrate([200,100,200])}catch(e){}}
+function auto(){if(!P.sys||!P.auto)return;const f=R.temp>28;if(f!==R.fan){R.fan=f;notify(f?"Kipas menyala otomatis":"Kipas mati otomatis","Suhu kamar "+R.temp.toFixed(1)+" °C",false)}
+ if(R.motion!==R.buzzer){R.buzzer=R.motion;sound()}}
+let mt;
+const A={
+ login(e){e.preventDefault();const u=$("#u").value.trim(),p=$("#p").value,ok=u==="admin"&&p==="kos123",dev=/Mobi|Android/i.test(navigator.userAgent)?"HP":"Komputer";
+  P.logins.unshift({t:new Date().toISOString(),u:u||"(kosong)",ok,dev});P.logins=P.logins.slice(0,100);
+  if(ok){P.user=u;err="";save();location.hash="beranda";notify("Berhasil masuk","Selamat datang, "+u,false)}else{err="Username atau kata sandi salah";save();render()}},
+ logout(){P.logins.unshift({t:new Date().toISOString(),u:P.user,ok:true,dev:"Keluar",out:1});P.user=null;save();location.hash="login"},
+ sys(on){act(on?"Menekan tombol Aktifkan Sistem":"Menekan tombol Matikan Sistem");P.sys=on;if(!on){R.fan=R.buzzer=R.motion=false;sound()}else auto();
+  notify(on?"Sistem diaktifkan":"Sistem dimatikan",on?"Sensor PIR dan suhu mulai memantau":"Pemantauan dihentikan",false);render()},
+ mode(a){P.auto=a;act("Mengubah mode menjadi "+(a?"Otomatis":"Manual"));auto();save();render()},
+ fan(on){if(P.auto||!P.sys)return render();R.fan=on;act((on?"Menyalakan":"Mematikan")+" kipas (manual)");render()},
+ buz(on){if(P.auto||!P.sys)return render();R.buzzer=on;act((on?"Menyalakan":"Mematikan")+" buzzer (manual)");sound();render()},
+ motion(){act("Menekan tombol Simulasi gerakan");if(!P.sys){banner("Sistem nonaktif","Aktifkan sistem dulu",false);return}
+  R.motion=true;notify("Gerakan terdeteksi!","Ada gerakan di kamar kos"+(P.auto?", buzzer menyala":""),true);auto();render();
+  clearTimeout(mt);mt=setTimeout(()=>{R.motion=false;auto();render()},6000)},
+ temp(d){act("Menekan tombol Simulasi suhu "+(d>0?"+":"−")+"1 °C");R.temp=Math.min(40,Math.max(20,R.temp+d));auto();render()},
+ tab(x){hTab=x;render()},
+ perm(){try{Notification.requestPermission().then(r=>{banner("Izin notifikasi",r==="granted"?"Notifikasi HP diaktifkan":"Izin tidak diberikan",false);render()})}catch(e){banner("Tidak didukung","Browser ini belum mendukung notifikasi",false)}},
+ clr(k){P[k]=[];if(k==="notifs")P.unread=0;save();render()}
+};
+const sw=(fn,on,dis,l)=>`<label class="switch"><input type="checkbox" aria-label="${l}" ${on?"checked":""} ${dis?"disabled":""} onchange="A.${fn}(this.checked)"><i></i></label>`;
+const item=(ic,h,s,t,bad)=>`<div class="item ${bad?"bad":""}"><div class="ic">${ic}</div><div><b>${h}</b>${s?`<span class="mute">${s}</span><br>`:""}<time>${st(t)}</time></div></div>`;
+const empty=m=>`<p style="padding:16px 0;text-align:center">${m}</p>`;
+
+function vLogin(){return `<div class="card login">${DUCK}<h1 style="color:var(--pink);font-size:1.8rem">Smart Security<br>Kamar Kos</h1><p>Monitoring dan pengendalian jarak jauh</p>
+<form onsubmit="A.login(event)"><label for="u">Username</label><input id="u" autocomplete="username" value="admin"><label for="p">Kata sandi</label><input id="p" type="password" autocomplete="current-password" placeholder="kos123">
+<div class="err" role="alert">${err}</div><button class="main big" style="width:100%">Masuk</button></form><p style="margin-top:12px">Akun demo: admin / kos123</p></div>`}
+function vHome(){const m=R.motion;return `<div class="card hero">${DUCK}<h1>Smart Security<br>Kamar Kos</h1><p>Monitoring dan pengendalian jarak jauh</p>
+<p style="margin-top:10px"><span class="chip ${P.sys?(m?"bad":""):"off"}">${P.sys?(m?"Gerakan terdeteksi":"Sistem aktif"):"Sistem nonaktif"}</span></p></div>
+<div class="stats"><div class="tile"><b id="hs">${R.temp.toFixed(1)}°</b><span>Suhu</span></div><div class="tile"><b>${m?"Ada":"Aman"}</b><span>Gerakan</span></div><div class="tile"><b>${R.fan?"On":"Off"}</b><span>Kipas</span></div></div>
+<div class="menu"><a class="tile" href="#monitor"><div class="e">🌀</div><b>Kipas Angin</b></a><a class="tile" href="#monitor"><div class="e">🛡️</div><b>Sistem Keamanan</b></a></div>
+<div class="two"><button class="main big ${P.sys?"on":""}" onclick="A.sys(true)">Aktifkan Sistem</button><button class="big ${P.sys?"":"on"}" onclick="A.sys(false)">Matikan Sistem</button></div><div class="band">KELOMPOK 7</div>`}
+function vMon(){const off=!P.sys,lock=P.auto||off,m=R.motion;return `<h2 style="margin:4px 4px 12px;font-size:1.5rem">Monitoring Sistem</h2>${off?'<div class="note">Sistem nonaktif. Aktifkan dulu di Beranda.</div>':""}
+<div class="card row"><div><h3>Mode ${P.auto?"Otomatis":"Manual"}</h3><p>${P.auto?"Kipas dan buzzer dikendalikan sensor":"Otomatis diblokir, kendalikan sendiri"}</p></div>${sw("mode",P.auto,off,"Mode otomatis")}</div>
+<div class="card"><div class="row"><div><span class="chip ${R.temp>28?"bad":""}" id="tc">${R.temp>28?"Panas":"Normal"}</span><h3 style="margin-top:8px">Suhu ruangan</h3></div><div class="val"><span id="tv">${R.temp.toFixed(1)}</span><small>°C</small></div></div><div class="gauge"><i id="tg" style="width:${(R.temp-20)*5}%"></i><u></u></div><p>Kipas otomatis menyala di atas 28 °C</p></div>
+<div class="card row"><div class="row" style="justify-content:flex-start"><span class="fan ${R.fan?"on":""}">🌀</span><div><h3>Kipas ${R.fan?"menyala":"mati"}</h3><p>${lock?"Terkunci, ganti ke mode manual":"Kendali manual"}</p></div></div>${sw("fan",R.fan,lock,"Kipas")}</div>
+<div class="card row"><div class="row" style="justify-content:flex-start"><span class="fan">🔔</span><div><h3>Buzzer ${R.buzzer?"menyala":"mati"}</h3><p>${lock?"Terkunci, ganti ke mode manual":"Kendali manual"}</p></div></div>${sw("buz",R.buzzer,lock,"Buzzer")}</div>
+<div class="card row"><div><h3>Gerakan (PIR)</h3><p>Gerakan dianggap pencuri</p></div><span class="chip ${m?"bad":""}">${m?"Terdeteksi":"Aman"}</span></div>
+<div class="card"><h3>Simulasi sensor</h3><p>Untuk mencoba tanpa perangkat ESP32</p><div class="two" style="margin:10px 0 0"><button onclick="A.motion()">Ada gerakan</button><button onclick="A.temp(1)">Suhu +1 °C</button></div><button style="width:100%;margin-top:10px" onclick="A.temp(-1)">Suhu −1 °C</button></div>`}
+function vHist(){const L=hTab==="login",d=L?P.logins:P.acts;return `<h2 style="margin:4px 4px 12px;font-size:1.5rem">Riwayat</h2><div class="seg" role="tablist"><button role="tab" aria-selected="${L}" onclick="A.tab('login')">Riwayat login</button><button role="tab" aria-selected="${!L}" onclick="A.tab('tombol')">Riwayat tombol</button></div>
+<div class="card">${d.length?d.map(x=>L?item(x.out?"👋":x.ok?"✅":"⚠️",x.out?"Keluar: "+x.u:(x.ok?"Login berhasil: ":"Login gagal: ")+x.u,x.out?"":"Perangkat: "+x.dev,x.t,!x.ok):item("👆",x.x,"",x.t)).join(""):empty("Belum ada riwayat")}</div>
+${d.length?`<button style="width:100%" onclick="A.clr('${L?"logins":"acts"}')">Hapus riwayat</button>`:""}`}
+function vNotif(){const g=window.Notification&&Notification.permission==="granted";return `<h2 style="margin:4px 4px 12px;font-size:1.5rem">Notifikasi</h2>
+<div class="card row"><div><h3>Notifikasi HP</h3><p>${g?"Aktif, peringatan dikirim ke perangkat ini":"Izinkan agar peringatan muncul di layar HP"}</p></div><button class="main" ${g?"disabled":""} onclick="A.perm()">${g?"Aktif":"Izinkan"}</button></div>
+<div class="card">${P.notifs.length?P.notifs.map(n=>item(n.bad?"🚨":"🔔",n.h,n.b,n.t,n.bad)).join(""):empty("Belum ada notifikasi. Coba simulasikan gerakan di Monitor.")}</div>${P.notifs.length?'<button style="width:100%" onclick="A.clr(\'notifs\')">Hapus notifikasi</button>':""}`}
+function vTim(){const M=[["Rifqi Miftah Farid Purnama","240534605558"],["Via Citra Farisa","240534608839"]];
+return `<div class="card hero">${DUCK}<h2 style="color:var(--pink);font-size:1.6rem">Kelompok 7</h2><p>Mikroprosessor dan Aplikasi IoT<br>S1 Pendidikan Teknik Elektro, Universitas Negeri Malang</p></div>
+<div class="card"><h3>Anggota</h3>${M.map(x=>`<div class="member"><div class="av">${x[0][0]}</div><div><b>${x[0]}</b><p>${x[1]}</p></div></div>`).join("")}</div>
+<div class="card"><h3>Komponen sistem</h3><p style="line-height:1.8">ESP32, sensor PIR, sensor suhu LM35, relay 5V dan kipas DC, buzzer, aplikasi Kodular dengan TinyDB.</p><p style="margin-top:8px">Dosen pengampu: Prof. Dr. Eng. Mokh. Sholihul Hadi, S.T., M.Eng.</p></div>`}
+
+const V={beranda:vHome,monitor:vMon,riwayat:vHist,notifikasi:vNotif,tim:vTim},N=[["beranda","🏠","Beranda"],["monitor","📡","Monitor"],["riwayat","🕒","Riwayat"],["notifikasi","🔔","Notif"],["tim","👥","Tim"]];
+const cur=()=>location.hash.slice(1);
+function render(){let h=cur();
+ if(!P.user){if(h!=="login"){location.hash="login";return}$("#top").hidden=$("#nav").hidden=true;$("#view").innerHTML=vLogin();return}
+ if(!V[h]){location.hash="beranda";return}
+ if(h==="notifikasi")P.unread=0;
+ $("#top").hidden=$("#nav").hidden=false;$("#view").innerHTML=V[h]();
+ $("#nav").innerHTML=N.map(n=>`<a href="#${n[0]}" ${n[0]===h?'aria-current="page"':""}><span>${n[1]}</span>${n[2]}${n[0]==="notifikasi"&&P.unread?`<em>${P.unread}</em>`:""}</a>`).join("");
+ window.scrollTo(0,0)}
+function clock(){const d=new Date();$("#tt").textContent=fT.format(d).replace(/\./g,":")+" WIB";$("#dd").textContent=fD.format(d)}
+setInterval(clock,1000);clock();
+setInterval(()=>{if(!P.sys)return;R.temp=Math.min(40,Math.max(20,R.temp+(Math.random()-.5)*.3));const f=R.fan;auto();
+ if(R.fan!==f)return render();
+ const v=$("#tv");if(v){v.textContent=R.temp.toFixed(1);$("#tg").style.width=(R.temp-20)*5+"%";const c=$("#tc");c.textContent=R.temp>28?"Panas":"Normal";c.className="chip"+(R.temp>28?" bad":"")}
+ const s=$("#hs");if(s)s.textContent=R.temp.toFixed(1)+"°"},2000);
+addEventListener("hashchange",render);render();
+</script>
+</body>
+</html>
